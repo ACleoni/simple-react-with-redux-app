@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import  { URL } from '../api/jsonplacehoder'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux';
+import { createPost } from '../actions/postActions';
+
 
 class PostForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
             title: '',
-            body: ''
+            content: ''
         }
 
         this.onChange = this.onChange.bind(this)
@@ -19,22 +22,14 @@ class PostForm extends Component {
     }
 
     onSubmit(event){
-        event.preventDefault();
 
         const post = {
             title: this.state.title,
             content: this.state.content
         }
 
-        fetch(`${URL}/posts`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(post)
-        })
-        .then(res => res.json())
-        .then(data => console.log(data))
+        event.preventDefault();
+        this.props.createPost(post);
     }
 
     
@@ -60,4 +55,9 @@ class PostForm extends Component {
     }
 }
 
-export default PostForm
+PostForm.propTypes = {
+    createPost: PropTypes.func.isRequired
+}
+
+
+export default connect(null, { createPost })(PostForm)
